@@ -13,7 +13,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "1080092072381-3rrm05itdcldhp26gu37p16btiggjl23.apps.googleusercontent.com",
+          "client_id": "1080092072381-va7i6fggigj86eftl4jjkgfgq3pv7b4d.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.hrawat.nearby",
@@ -21,13 +21,21 @@
           }
         },
         {
-          "client_id": "1080092072381-6gajthl6vihbtct2qqlhnn958cngor22.apps.googleusercontent.com",
+          "client_id": "1080092072381-a1vodhesgse3kj6cnc61rkci9n4tfib4.apps.googleusercontent.com",
           "client_type": 3
+        },
+        {
+          "client_id": "1080092072381-3pgtbmf2dj1che0uocp3h4ot8m047vtv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hrawat.nearby",
+            "certificate_hash": "ba3129fd162030bb2d4d3d83463c9e00392d29fb"
+          }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCL-J16_0ZsjgJFj3fZVPvztSXwVlwGrco"
+          "current_key": "AIzaSyClcdcxzzix5eRY0e80EtI0o1DFdwphC28"
         }
       ],
       "services": {

@@ -22,6 +22,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private SignInButton signInButton;
     private GoogleApiClient apiClient;
     private static final int REQ_CODE = 9001;
+    public static final String USER_NAME="NAME";
+    public static final String USER_EMAIL="EMAIL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +57,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String name = account.getDisplayName();
             String address = account.getEmail();
             // String img_url = account.getPhotoUrl().toString();
-            Toast.makeText(this, "EMAIL =" + address, Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this, "EMAIL =" + address, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            intent.putExtra("EMAIL", address);
-            intent.putExtra("NAME", name);
+            intent.putExtra(USER_EMAIL, address);
+            intent.putExtra(USER_NAME, name);
             startActivity(intent);
         }
     }
