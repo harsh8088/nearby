@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1080092072381",
+    "project_id": "nearby-180510"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1080092072381:android:32b6f9f28c2d6b80",
+        "android_client_info": {
+          "package_name": "com.hrawat.nearby"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1080092072381-3rrm05itdcldhp26gu37p16btiggjl23.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hrawat.nearby",
+            "certificate_hash": "b5ea7c96abb51d434b965bac9d7c5e9506d5f2d4"
+          }
+        },
+        {
+          "client_id": "1080092072381-6gajthl6vihbtct2qqlhnn958cngor22.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCL-J16_0ZsjgJFj3fZVPvztSXwVlwGrco"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
