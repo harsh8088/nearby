@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "215534536433",
+    "firebase_url": "https://nearby-4624d.firebaseio.com",
+    "project_id": "nearby-4624d",
+    "storage_bucket": "nearby-4624d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215534536433:android:32b6f9f28c2d6b80",
+        "android_client_info": {
+          "package_name": "com.hrawat.nearby"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215534536433-b3s61jvfj714hkskj4oquhs9hd1pg21s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hrawat.nearby",
+            "certificate_hash": "30baa8af81c38fbedd38efc14b19d85a0f31797d"
+          }
+        },
+        {
+          "client_id": "215534536433-fipsoqfutcal2gg6rq6v4a48674f0co3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZJX62yH5yyo5mYPAr_eAvcJhYlsBGPbw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215534536433-fipsoqfutcal2gg6rq6v4a48674f0co3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
