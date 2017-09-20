@@ -1,4 +1,4 @@
-package com.hrawat.nearby;
+package com.hrawat.nearby.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.hrawat.nearby.activity.HomeActivity;
+import com.hrawat.nearby.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
@@ -29,8 +29,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_main);
         signInButton = (SignInButton) findViewById(R.id.google_signin);
         signInButton.setOnClickListener(this);
-        GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        apiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, options).build();
+        GoogleSignInOptions options = new GoogleSignInOptions.
+                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        apiClient = new GoogleApiClient.Builder(this).
+                enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, options).build();
     }
 
     @Override
@@ -52,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             GoogleSignInAccount account = result.getSignInAccount();
             String name = account.getDisplayName();
             String address = account.getEmail();
-           // String img_url = account.getPhotoUrl().toString();
+            // String img_url = account.getPhotoUrl().toString();
             Toast.makeText(this, "EMAIL =" + address, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             intent.putExtra("EMAIL", address);
