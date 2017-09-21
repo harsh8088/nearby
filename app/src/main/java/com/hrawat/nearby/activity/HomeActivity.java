@@ -1,5 +1,6 @@
 package com.hrawat.nearby.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -30,7 +31,7 @@ public class HomeActivity extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             name = bundle.getString(LoginActivity.USER_NAME);
-            email=bundle.getString(LoginActivity.USER_EMAIL);
+            email = bundle.getString(LoginActivity.USER_EMAIL);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -84,6 +85,8 @@ public class HomeActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
+            Intent intent = new Intent(HomeActivity.this, DetailsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
         } else if (id == R.id.nav_manage) {
         } else if (id == R.id.nav_share) {
