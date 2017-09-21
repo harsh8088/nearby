@@ -14,6 +14,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.hrawat.nearby.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,
@@ -22,8 +24,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private SignInButton signInButton;
     private GoogleApiClient apiClient;
     private static final int REQ_CODE = 9001;
-    public static final String USER_NAME="NAME";
-    public static final String USER_EMAIL="EMAIL";
+    public static final String USER_NAME = "NAME";
+    public static final String USER_EMAIL = "EMAIL";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         apiClient = new GoogleApiClient.Builder(this).
                 enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, options).build();
-    }
+            }
 
     @Override
     public void onClick(View view) {
@@ -43,8 +47,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.google_signin:
                 googleSignIn();
                 break;
+
         }
     }
+
 
     private void googleSignIn() {
         Intent intent = Auth.GoogleSignInApi.getSignInIntent(apiClient);
@@ -57,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String name = account.getDisplayName();
             String address = account.getEmail();
             // String img_url = account.getPhotoUrl().toString();
-           // Toast.makeText(this, "EMAIL =" + address, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "EMAIL =" + address, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             intent.putExtra(USER_EMAIL, address);
             intent.putExtra(USER_NAME, name);

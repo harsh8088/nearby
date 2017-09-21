@@ -24,10 +24,12 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <foodcategory android:name="android.intent.foodcategory.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.DetailsActivity"></activity>
+        <activity
+            android:name=".activity.DetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
