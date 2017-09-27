@@ -47,7 +47,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-
         apiClient = new GoogleApiClient.Builder(this).
                 enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, options).build();
         mAuth = FirebaseAuth.getInstance();
@@ -67,16 +66,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String address = currentUser.getEmail();
             // String img_url = account.getPhotoUrl().toString();
             // Toast.makeText(this, "EMAIL =" + address, Toast.LENGTH_SHORT).show();
-            onDestroy();
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             intent.putExtra(USER_EMAIL, address);
             intent.putExtra(USER_NAME, name);
             startActivity(intent);
-        }
-        else
-        {
+            finish();
+        } else {
             /**handle failure here*/
-
         }
     }
 

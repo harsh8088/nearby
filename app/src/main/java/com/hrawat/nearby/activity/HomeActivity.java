@@ -33,12 +33,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hrawat.nearby.R;
 import com.hrawat.nearby.activity.adapter.CategoryAdapter;
+import com.hrawat.nearby.activity.model.NearByCategory;
+
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private String TAG=this.getClass().getName();
+    private String TAG = this.getClass().getName();
     private String name = "FITOR";
     private String email = "abc.com";
     private GoogleApiClient apiClient;
@@ -46,6 +49,7 @@ public class HomeActivity extends AppCompatActivity
     private CategoryAdapter categoryAdapter;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +88,7 @@ public class HomeActivity extends AppCompatActivity
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(categoryAdapter);
-
         getAllCategories();
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -97,8 +99,9 @@ public class HomeActivity extends AppCompatActivity
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                    startActivity(intent);
                 }
-                // ...
             }
         };
     }
@@ -106,24 +109,22 @@ public class HomeActivity extends AppCompatActivity
     private void getAllCategories() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("categories");
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+        final ArrayList<NearByCategory> nearByCategories = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Value is: " + value);
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    nearByCategories.add(new NearByCategory((String) child.child("icon").getValue(),
+                            (String) child.child("name").getValue(),
+                            (String) child.child("thumnail").getValue()));
+                }
+                categoryAdapter.addAllCategories(nearByCategories);
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
-
-
 
     }
 
@@ -202,10 +203,10 @@ public class HomeActivity extends AppCompatActivity
             public void onResult(@NonNull Status status) {
                 FirebaseAuth.getInstance().signOut();
                 Toast.makeText(HomeActivity.this, "LogOut Succesfully", Toast.LENGTH_SHORT).show();
-                onDestroy();
-                Intent intent=new Intent(HomeActivity.this,LoginActivity.class);
+                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-
+                finish();
             }
         });
     }

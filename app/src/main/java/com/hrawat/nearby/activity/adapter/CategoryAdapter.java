@@ -24,7 +24,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public CategoryAdapter(Context context) {
         this.nearByCategoryList = new ArrayList<>();
-        this.nearByCategoryList = getDummyCategories();
+    //    this.nearByCategoryList = getDummyCategories();
         this.context = context;
     }
 
