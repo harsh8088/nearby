@@ -3,6 +3,8 @@
     package="com.hrawat.nearby">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -28,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.DetailsActivity"
+            android:name=".activity.ListActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

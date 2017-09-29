@@ -28,6 +28,10 @@
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Logout"/>
+            <item
+                android:id="@+id/nav_privacy"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Terms of Use and Privacy Policy"/>
         </menu>
     </item>
 </menu>

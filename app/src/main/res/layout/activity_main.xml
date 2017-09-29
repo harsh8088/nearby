@@ -28,15 +28,7 @@
             android:layout_marginBottom="24dp"
             android:layout_marginTop="24dp" />
 
-        <TextView
-            android:id="@+id/link_signup"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="Buri nazar wale tera kaala"
-            android:textColor="@color/colorAccent"
-            android:textSize="16dip" />
+
 
     </LinearLayout>
 </ScrollView>

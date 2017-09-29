@@ -19,4 +19,5 @@
     <color name="blue">#0000FF</color>
     <color name="navy">#000080</color>
     <color name="black">#000000</color>
+    <color name="txt_dark_grey">#707070</color>
 </resources>

@@ -1,9 +1,17 @@
 package com.hrawat.nearby.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,6 +32,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,25 +43,35 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hrawat.nearby.BuildConfig;
 import com.hrawat.nearby.R;
 import com.hrawat.nearby.activity.adapter.CategoryAdapter;
 import com.hrawat.nearby.activity.model.NearByCategory;
+import com.hrawat.nearby.activity.model.SearchModel.PlaceResultModel;
+import com.hrawat.nearby.activity.model.SearchModel.SearchResults;
+import com.hrawat.nearby.network.ApiClient;
+import com.hrawat.nearby.network.ApiInterface;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener {
 
     private String TAG = this.getClass().getName();
-    private String name = "FITOR";
-    private String email = "abc.com";
+    private String name = "username";
+    private String email = "abc@mail.com";
     private GoogleApiClient apiClient;
-    private RecyclerView recyclerView;
     private CategoryAdapter categoryAdapter;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private DatabaseReference mDatabase;
+    protected Location mLastLocation;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +79,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         mAuth = FirebaseAuth.getInstance();
         init();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
     private void init() {
@@ -84,7 +107,7 @@ public class HomeActivity extends AppCompatActivity
         emailID.setText(email);
         navigationView.setNavigationItemSelectedListener(this);
         categoryAdapter = new CategoryAdapter(this);
-        recyclerView = (RecyclerView) findViewById(R.id.rv_category);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_category);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(categoryAdapter);
@@ -104,6 +127,21 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         };
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mLastLocation != null)
+                    searchNearby(String.format("%s,%s", mLastLocation.getLatitude(),
+                            mLastLocation.getLongitude()), "Hotels", "Hotels", "5000");
+                else
+                    Toast.makeText(HomeActivity.this, "last location is null", Toast.LENGTH_SHORT).show();
+            }
+        }, 3000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private void getAllCategories() {
@@ -125,13 +163,175 @@ public class HomeActivity extends AppCompatActivity
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        if (!checkPermissions()) {
+            requestPermissions();
+        } else {
+            getLastLocation();
+        }
+    }
+
+    /**
+     * Provides a simple way of getting a device's location and is well suited for
+     * applications that do not require a fine-grained location and that do not need location
+     * updates. Gets the best and most recent location currently available, which may be null
+     * in rare cases when a location is not available.
+     * <p>
+     * Note: this method should be called after location permission has been granted.
+     */
+    @SuppressWarnings("MissingPermission")
+    private void getLastLocation() {
+        mFusedLocationClient.getLastLocation()
+                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            mLastLocation = task.getResult();
+                            Toast.makeText(HomeActivity.this, "LatLong:" + mLastLocation.getLatitude()
+                                            + " " + mLastLocation.getLongitude(),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.w(TAG, "getLastLocation:exception", task.getException());
+                            Toast.makeText(HomeActivity.this, "no_location_detected",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private boolean checkPermissions() {
+        int permissionState = ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermissions() {
+        boolean shouldProvideRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION);
+        // Provide an additional rationale to the user. This would happen if the user denied the
+        // request previously, but didn't check the "Don't ask again" checkbox.
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+            showSnackbar(R.string.permission_rationale, android.R.string.ok,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // Request permission
+                            startLocationPermissionRequest();
+                        }
+                    });
+        } else {
+            Log.i(TAG, "Requesting permission");
+            // Request permission. It's possible this can be auto answered if device policy
+            // sets the permission in a given state or the user denied the permission
+            // previously and checked "Never ask again".
+            startLocationPermissionRequest();
+        }
+    }
+
+    private void startLocationPermissionRequest() {
+        ActivityCompat.requestPermissions(HomeActivity.this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                REQUEST_PERMISSIONS_REQUEST_CODE);
+    }
+
+
+
+    /**
+     * Shows a {@link Snackbar}.
+     *
+     * @param mainTextStringId The id for the string resource for the Snackbar text.
+     * @param actionStringId   The text of the action item.
+     * @param listener         The listener associated with the Snackbar action.
+     */
+    private void showSnackbar(final int mainTextStringId, final int actionStringId,
+                              View.OnClickListener listener) {
+        Snackbar.make(findViewById(android.R.id.content),
+                getString(mainTextStringId),
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(actionStringId), listener).show();
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        Log.i(TAG, "onRequestPermissionResult");
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length <= 0) {
+                // If user interaction was interrupted, the permission request is cancelled and you
+                // receive empty arrays.
+                Log.i(TAG, "User interaction was cancelled.");
+            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted.
+                getLastLocation();
+            } else {
+                // Permission denied.
+                // Notify the user via a SnackBar that they have rejected a core permission for the
+                // app, which makes the Activity useless. In a real app, core permissions would
+                // typically be best requested during a welcome-screen flow.
+                // Additionally, it is important to remember that a permission might have been
+                // rejected without asking the user for permission (device policy or "Never ask
+                // again" prompts). Therefore, a user interface affordance is typically implemented
+                // when permissions are denied. Otherwise, your app could appear unresponsive to
+                // touches or interactions which have required permissions.
+                showSnackbar(R.string.permission_denied_explanation, R.string.settings,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // Build intent that displays the App settings screen.
+                                Intent intent = new Intent();
+                                intent.setAction(
+                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri uri = Uri.fromParts("package",
+                                        BuildConfig.APPLICATION_ID, null);
+                                intent.setData(uri);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        });
+            }
+        }
+    }
+
+    private void searchNearby(String LatLongString, String searchfor, String keyword, String searchWithin) {
+        ApiInterface apiService =
+                ApiClient.getPlacesClient().create(ApiInterface.class);
+        Call<SearchResults> call = apiService.getNearByPlaces(LatLongString, searchWithin,
+                searchfor, keyword, "AIzaSyChQ0n-vud41n-_pz-nXBiDJTQrG7F0CJs");
+        call.enqueue(new Callback<SearchResults>() {
+            @Override
+            public void onResponse(Call<SearchResults> call, Response<SearchResults> response) {
+                String status = response.body().getStatus();
+                switch (status) {
+                    case "OK":
+                        ArrayList<PlaceResultModel> places = response.body().getResults();
+                        Log.d(TAG, "Number of Places : " + places.size());
+                        break;
+                    case "ZERO_RESULTS":
+                        Toast.makeText(HomeActivity.this, "No such results!!!",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                    case "REQUEST_DENIED":
+                        Log.d(TAG, "Access Denied : " + response.body().getErrorMessage());
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchResults> call, Throwable t) {
+                Log.d(TAG, "Error : " + t.toString());
+            }
+        });
     }
 
     @Override
@@ -160,6 +360,9 @@ public class HomeActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_search) {
+            Intent intent = new Intent(HomeActivity.this, ListActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -180,21 +383,18 @@ public class HomeActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(HomeActivity.this, DetailsActivity.class);
+            Intent intent = new Intent(HomeActivity.this, ListActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
         } else if (id == R.id.nav_manage) {
         } else if (id == R.id.nav_share) {
         } else if (id == R.id.nav_logout) {
             signOut();
+        } else if (id == R.id.nav_privacy) {
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
     public void signOut() {
@@ -209,5 +409,9 @@ public class HomeActivity extends AppCompatActivity
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 }

@@ -8,15 +8,15 @@
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/thug" />
+        android:background="@drawable/category_image"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/roundbox"
-        android:padding="5dp"
+        android:padding="10dp"
         android:text="NearBy"
         android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 </FrameLayout>
