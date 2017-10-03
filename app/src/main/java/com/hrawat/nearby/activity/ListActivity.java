@@ -1,8 +1,8 @@
 package com.hrawat.nearby.activity;
 
-import android.location.Location;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,14 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.hrawat.nearby.R;
 import com.hrawat.nearby.activity.adapter.ListAdapter;
 import com.hrawat.nearby.activity.model.ListModel;
@@ -25,22 +22,25 @@ import com.hrawat.nearby.activity.model.SearchModel.PlaceResultModel;
 import com.hrawat.nearby.activity.model.SearchModel.SearchResults;
 import com.hrawat.nearby.network.ApiClient;
 import com.hrawat.nearby.network.ApiInterface;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LATITUDE;
+import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LONGITUTE;
+
 public class ListActivity extends AppCompatActivity {
 
+    public static final String BUNDLE_EXTRA_CATEGORY_NAME = "BUNDLE_EXTRA_CATEGORY_NAME";
     private String TAG = this.getClass().getSimpleName();
-    private List<ListModel> listModels = new ArrayList<>();
     private ListAdapter listAdapter;
     private EditText etSearch;
-    protected Location mLastLocation;
-    private FusedLocationProviderClient mFusedLocationClient;
+    private String categoryName = "";
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +49,29 @@ public class ListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        listAdapter = new ListAdapter(this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(listAdapter);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.get(BUNDLE_EXTRA_CATEGORY_NAME) != null) {
+            categoryName = (String) bundle.get(BUNDLE_EXTRA_CATEGORY_NAME);
+        }
+        init();
+        if (bundle != null && bundle.containsKey(BUNDLE_EXTRA_CATEGORY_NAME)) {
+            etSearch.setText(categoryName);
+            searchNearby(categoryName, categoryName, "5000");
+        }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+    }
+
+    private void init() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        listAdapter = new ListAdapter(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter(listAdapter);
         etSearch = (EditText) findViewById(R.id.et_action_search);
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -72,49 +83,39 @@ public class ListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.length() >= 3) {
-                    String searchfor = editable.toString();
-                    searchNearby(String.format("%s,%s", mLastLocation.getLatitude(),
-                            mLastLocation.getLongitude()), searchfor, searchfor, "5000");
-                }
-            }
-        });
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getLastLocation();
-    }
-
-    /**
-     * Provides a simple way of getting a device's location and is well suited for
-     * applications that do not require a fine-grained location and that do not need location
-     * updates. Gets the best and most recent location currently available, which may be null
-     * in rare cases when a location is not available.
-     * <p>
-     * Note: this method should be called after location permission has been granted.
-     */
-    @SuppressWarnings("MissingPermission")
-    private void getLastLocation() {
-        mFusedLocationClient.getLastLocation()
-                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+            public void afterTextChanged(final Editable editable) {
+                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            mLastLocation = task.getResult();
+                    public void run() {
+                        if (editable.length() >= 3) {
+                            String searchfor = editable.toString();
+                            searchNearby(searchfor, searchfor, "5000");
                         } else {
-                            Log.w(TAG, "getLastLocation:exception", task.getException());
-                            Toast.makeText(ListActivity.this, "no_location_detected",
-                                    Toast.LENGTH_SHORT).show();
+                            listAdapter.clearAll();
                         }
                     }
-                });
+                }, 1000);
+            }
+        });
     }
 
-    private void searchNearby(String LatLongString, String searchfor, String keyword, String searchWithin) {
+    public void showProgress() {
+        hideProgress();
+        progress = ProgressDialog.show(new ContextThemeWrapper(this,
+                android.R.style.Theme_Holo_Light), "", "", true, false);
+        progress.setContentView(R.layout.progress_bar);
+    }
+
+    public void hideProgress() {
+        if (progress != null) {
+            progress.dismiss();
+        }
+    }
+
+    private void searchNearby(String searchfor, String keyword, String searchWithin) {
+        showProgress();
+        String LatLongString = String.format("%s,%s", Hawk.get(LOCATION_LATITUDE),
+                Hawk.get(LOCATION_LONGITUTE));
         ApiInterface apiService =
                 ApiClient.getPlacesClient().create(ApiInterface.class);
         Call<SearchResults> call = apiService.getNearByPlaces(LatLongString, searchWithin,
@@ -123,6 +124,7 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<SearchResults> call, Response<SearchResults> response) {
                 String status = response.body().getStatus();
+                hideProgress();
                 switch (status) {
                     case "OK":
                         ArrayList<PlaceResultModel> places = response.body().getResults();
@@ -153,5 +155,4 @@ public class ListActivity extends AppCompatActivity {
             }
         });
     }
-
 }

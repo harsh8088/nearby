@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -51,6 +50,7 @@ import com.hrawat.nearby.activity.model.SearchModel.PlaceResultModel;
 import com.hrawat.nearby.activity.model.SearchModel.SearchResults;
 import com.hrawat.nearby.network.ApiClient;
 import com.hrawat.nearby.network.ApiInterface;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
 
@@ -62,6 +62,8 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener {
 
+    public static final String LOCATION_LATITUDE = "LOCATION_LATITUDE";
+    public static final String LOCATION_LONGITUTE = "LOCATION_LONGITUTE";
     private String TAG = this.getClass().getName();
     private String name = "username";
     private String email = "abc@mail.com";
@@ -78,8 +80,8 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         mAuth = FirebaseAuth.getInstance();
-        init();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        init();
     }
 
     private void init() {
@@ -111,6 +113,14 @@ public class HomeActivity extends AppCompatActivity
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(categoryAdapter);
+        categoryAdapter.setCategoryListener(new CategoryAdapter.CategoryListener() {
+            @Override
+            public void onCategoryClick(CategoryAdapter categoryAdapter, String categoryName) {
+                Intent intent = new Intent(HomeActivity.this, ListActivity.class);
+                intent.putExtra(ListActivity.BUNDLE_EXTRA_CATEGORY_NAME, categoryName);
+                startActivity(intent);
+            }
+        });
         getAllCategories();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -127,16 +137,6 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         };
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mLastLocation != null)
-                    searchNearby(String.format("%s,%s", mLastLocation.getLatitude(),
-                            mLastLocation.getLongitude()), "Hotels", "Hotels", "5000");
-                else
-                    Toast.makeText(HomeActivity.this, "last location is null", Toast.LENGTH_SHORT).show();
-            }
-        }, 3000);
     }
 
     @Override
@@ -192,9 +192,13 @@ public class HomeActivity extends AppCompatActivity
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
                             mLastLocation = task.getResult();
-                            Toast.makeText(HomeActivity.this, "LatLong:" + mLastLocation.getLatitude()
-                                            + " " + mLastLocation.getLongitude(),
-                                    Toast.LENGTH_SHORT).show();
+                            Hawk.put(LOCATION_LATITUDE, mLastLocation.getLatitude());
+                            Hawk.put(LOCATION_LONGITUTE, mLastLocation.getLongitude());
+                            Log.w(TAG, "LatLong: " + mLastLocation.getLatitude() +
+                                    " , " + mLastLocation.getLongitude());
+//                            Toast.makeText(HomeActivity.this, "LatLong:" + mLastLocation.getLatitude()
+//                                            + " " + mLastLocation.getLongitude(),
+//                                    Toast.LENGTH_SHORT).show();
                         } else {
                             Log.w(TAG, "getLastLocation:exception", task.getException());
                             Toast.makeText(HomeActivity.this, "no_location_detected",
@@ -240,8 +244,6 @@ public class HomeActivity extends AppCompatActivity
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                 REQUEST_PERMISSIONS_REQUEST_CODE);
     }
-
-
 
     /**
      * Shows a {@link Snackbar}.

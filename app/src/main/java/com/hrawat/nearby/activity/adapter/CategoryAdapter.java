@@ -19,28 +19,23 @@ import java.util.List;
  */
 public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private CategoryListener categoryListener;
+
+    public interface CategoryListener {
+
+        void onCategoryClick(CategoryAdapter categoryAdapter, String categoryName);
+    }
+
+    public void setCategoryListener(CategoryListener listener) {
+        this.categoryListener = listener;
+    }
+
     private List<NearByCategory> nearByCategoryList;
     private Context context;
 
     public CategoryAdapter(Context context) {
         this.nearByCategoryList = new ArrayList<>();
-    //    this.nearByCategoryList = getDummyCategories();
         this.context = context;
-    }
-
-    private ArrayList<NearByCategory> getDummyCategories() {
-        ArrayList<NearByCategory> dummyCategories = new ArrayList<>();
-        dummyCategories.add(new NearByCategory("", "Bars", ""));
-        dummyCategories.add(new NearByCategory("", "Shopping Malls", ""));
-        dummyCategories.add(new NearByCategory("", "Service Center", ""));
-        dummyCategories.add(new NearByCategory("", "Grocery Store", ""));
-        dummyCategories.add(new NearByCategory("", "Petrol Pumps", ""));
-        dummyCategories.add(new NearByCategory("", "Restaurants", ""));
-        dummyCategories.add(new NearByCategory("", "Game Parlours", ""));
-        dummyCategories.add(new NearByCategory("", "Hotels", ""));
-        dummyCategories.add(new NearByCategory("", "Bus Station", ""));
-        dummyCategories.add(new NearByCategory("", "Railway Station", ""));
-        return dummyCategories;
     }
 
     @Override
@@ -50,12 +45,18 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        NearByCategory details = nearByCategoryList.get(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        final NearByCategory details = nearByCategoryList.get(position);
         CategoryViewHolder viewHolder = (CategoryViewHolder) holder;
 //        viewHolder.icon.(details.getIcon());
 //        viewHolder.background
         viewHolder.categoryName.setText(details.getName());
+        viewHolder.background.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                categoryListener.onCategoryClick(CategoryAdapter.this, details.getName());
+            }
+        });
     }
 
     @Override

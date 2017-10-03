@@ -44,6 +44,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> 
         this.items.addAll(listModels);
         this.notifyDataSetChanged();
     }
+    public void clearAll() {
+        this.items.clear();
+        this.notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {
