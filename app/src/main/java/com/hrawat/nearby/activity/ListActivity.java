@@ -1,5 +1,6 @@
 package com.hrawat.nearby.activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +13,11 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hrawat.nearby.R;
@@ -20,6 +25,7 @@ import com.hrawat.nearby.activity.adapter.ListAdapter;
 import com.hrawat.nearby.activity.model.ListModel;
 import com.hrawat.nearby.activity.model.SearchModel.PlaceResultModel;
 import com.hrawat.nearby.activity.model.SearchModel.SearchResults;
+import com.hrawat.nearby.model.FilterModel;
 import com.hrawat.nearby.network.ApiClient;
 import com.hrawat.nearby.network.ApiInterface;
 import com.orhanobut.hawk.Hawk;
@@ -73,6 +79,13 @@ public class ListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(listAdapter);
         etSearch = (EditText) findViewById(R.id.et_action_search);
+        ImageView imageFilter = (ImageView) findViewById(R.id.iv_filter_search);
+        imageFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showFilterDialog();
+            }
+        });
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -99,6 +112,61 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
+    private void showFilterDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setTitle("Filter by");
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.filter_dialog);
+     final TextView textSeekBar = dialog.findViewById(R.id.tv_seek_bar_max);
+        Button btnApply = dialog.findViewById(R.id.btn_apply);
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
+        SeekBar seekBar = dialog.findViewById(R.id.seekbar_distance);
+        dialog.show();
+        if (Hawk.contains("FILTER")) {
+            FilterModel filterModel = Hawk.get("FILTER");
+            if (filterModel.isApplied()) {
+                int distance = Integer.valueOf(filterModel.getDistance());
+                distance = distance / 1000;
+//                textSeekBar.setText(distance);
+                seekBar.setProgress(distance);
+            }
+        }
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if (i >= 1)
+                    textSeekBar.setText(String.valueOf(i));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+        btnApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int distance = Integer.valueOf(textSeekBar.getText().toString());
+                distance = distance * 1000;
+                FilterModel filterModel = new FilterModel(String.valueOf(distance), true);
+                Hawk.put("FILTER", filterModel);
+                searchNearby(etSearch.getText().toString(), etSearch.getText().toString(),
+                        String.valueOf(distance));
+                dialog.dismiss();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+    }
+
     public void showProgress() {
         hideProgress();
         progress = ProgressDialog.show(new ContextThemeWrapper(this,
@@ -114,6 +182,14 @@ public class ListActivity extends AppCompatActivity {
 
     private void searchNearby(String searchfor, String keyword, String searchWithin) {
         showProgress();
+        if (Hawk.contains("FILTER")) {
+            FilterModel filterModel = Hawk.get("FILTER");
+            if (filterModel.isApplied()) {
+                int distance = Integer.valueOf(filterModel.getDistance());
+                searchWithin = String.valueOf(distance);
+            }
+        }
+
         String LatLongString = String.format("%s,%s", Hawk.get(LOCATION_LATITUDE),
                 Hawk.get(LOCATION_LONGITUTE));
         ApiInterface apiService =
