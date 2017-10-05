@@ -1,7 +1,6 @@
 package com.hrawat.nearby.activity;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,7 +44,7 @@ public class ListActivity extends AppCompatActivity {
     private ListAdapter listAdapter;
     private EditText etSearch;
     private String categoryName = "";
-    private ProgressDialog progress;
+    RecyclerView recyclerViewList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +60,6 @@ public class ListActivity extends AppCompatActivity {
         init();
         if (bundle != null && bundle.containsKey(BUNDLE_EXTRA_CATEGORY_NAME)) {
             etSearch.setText(categoryName);
-            searchNearby(categoryName, categoryName, "5000");
         }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,11 +70,11 @@ public class ListActivity extends AppCompatActivity {
     }
 
     private void init() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerViewList = (RecyclerView) findViewById(R.id.recycler_view);
         listAdapter = new ListAdapter(this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(listAdapter);
+        recyclerViewList.setLayoutManager(mLayoutManager);
+        recyclerViewList.setAdapter(listAdapter);
         etSearch = (EditText) findViewById(R.id.et_action_search);
         ImageView imageFilter = (ImageView) findViewById(R.id.iv_filter_search);
         imageFilter.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +90,8 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() == 0)
+                    listAdapter.clearAll();
             }
 
             @Override
@@ -103,8 +102,6 @@ public class ListActivity extends AppCompatActivity {
                         if (editable.length() >= 3) {
                             String searchfor = editable.toString();
                             searchNearby(searchfor, searchfor, "5000");
-                        } else {
-                            listAdapter.clearAll();
                         }
                     }
                 }, 1000);
@@ -117,7 +114,7 @@ public class ListActivity extends AppCompatActivity {
         dialog.setTitle("Filter by");
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.filter_dialog);
-     final TextView textSeekBar = dialog.findViewById(R.id.tv_seek_bar_max);
+        final TextView textSeekBar = dialog.findViewById(R.id.tv_seek_bar_max);
         Button btnApply = dialog.findViewById(R.id.btn_apply);
         Button btnCancel = dialog.findViewById(R.id.btn_cancel);
         SeekBar seekBar = dialog.findViewById(R.id.seekbar_distance);
@@ -164,24 +161,9 @@ public class ListActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
-    }
-
-    public void showProgress() {
-        hideProgress();
-        progress = ProgressDialog.show(new ContextThemeWrapper(this,
-                android.R.style.Theme_Holo_Light), "", "", true, false);
-        progress.setContentView(R.layout.progress_bar);
-    }
-
-    public void hideProgress() {
-        if (progress != null) {
-            progress.dismiss();
-        }
     }
 
     private void searchNearby(String searchfor, String keyword, String searchWithin) {
-        showProgress();
         if (Hawk.contains("FILTER")) {
             FilterModel filterModel = Hawk.get("FILTER");
             if (filterModel.isApplied()) {
@@ -189,7 +171,7 @@ public class ListActivity extends AppCompatActivity {
                 searchWithin = String.valueOf(distance);
             }
         }
-
+        listAdapter.startLoading();
         String LatLongString = String.format("%s,%s", Hawk.get(LOCATION_LATITUDE),
                 Hawk.get(LOCATION_LONGITUTE));
         ApiInterface apiService =
@@ -200,7 +182,6 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<SearchResults> call, Response<SearchResults> response) {
                 String status = response.body().getStatus();
-                hideProgress();
                 switch (status) {
                     case "OK":
                         ArrayList<PlaceResultModel> places = response.body().getResults();
@@ -211,15 +192,15 @@ public class ListActivity extends AppCompatActivity {
                         }
                         listAdapter.replaceAll(listModels);
                         Log.d(TAG, "Number of Places : " + places.size());
-                        Toast.makeText(ListActivity.this, "Number of Places Found : " + places.size(),
-                                Toast.LENGTH_SHORT).show();
                         break;
                     case "ZERO_RESULTS":
+                        listAdapter.clearAll();
                         Toast.makeText(ListActivity.this, "No such results!!!",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     default:
                     case "REQUEST_DENIED":
+                        listAdapter.clearAll();
                         Log.d(TAG, "Access Denied : " + response.body().getErrorMessage());
                         break;
                 }
@@ -227,6 +208,7 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SearchResults> call, Throwable t) {
+                listAdapter.replaceAll(new ArrayList<ListModel>());
                 Log.d(TAG, "Error : " + t.toString());
             }
         });
