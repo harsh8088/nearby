@@ -1,6 +1,7 @@
 package com.hrawat.nearby.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -34,12 +35,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.hrawat.nearby.activity.DetailsActivity.BUNDLE_EXTRA_PLACE;
 import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LATITUDE;
 import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LONGITUTE;
 
 public class ListActivity extends AppCompatActivity {
 
     public static final String BUNDLE_EXTRA_CATEGORY_NAME = "BUNDLE_EXTRA_CATEGORY_NAME";
+
     private String TAG = this.getClass().getSimpleName();
     private ListAdapter listAdapter;
     private EditText etSearch;
@@ -105,6 +108,15 @@ public class ListActivity extends AppCompatActivity {
                         }
                     }
                 }, 1000);
+            }
+        });
+        listAdapter.setClickListener(new ListAdapter.ClickListener() {
+            @Override
+            public void onListClick(ListAdapter adapter, int position) {
+                Intent intent = new Intent(ListActivity.this, DetailsActivity.class);
+                if(listAdapter.getPlace(position)!=null)
+                intent.putExtra(BUNDLE_EXTRA_PLACE, listAdapter.getPlace(position));
+                startActivity(intent);
             }
         });
     }
@@ -190,7 +202,7 @@ public class ListActivity extends AppCompatActivity {
                             listModels.add(new ListModel(placeResultModel.getName(),
                                     placeResultModel.getVicinity()));
                         }
-                        listAdapter.replaceAll(listModels);
+                        listAdapter.replaceAll(listModels, places);
                         Log.d(TAG, "Number of Places : " + places.size());
                         break;
                     case "ZERO_RESULTS":
@@ -208,7 +220,7 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SearchResults> call, Throwable t) {
-                listAdapter.replaceAll(new ArrayList<ListModel>());
+                listAdapter.replaceAll(new ArrayList<ListModel>(), new ArrayList<PlaceResultModel>());
                 Log.d(TAG, "Error : " + t.toString());
             }
         });

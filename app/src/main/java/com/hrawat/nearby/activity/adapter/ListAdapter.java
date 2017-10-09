@@ -5,10 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.hrawat.nearby.R;
 import com.hrawat.nearby.activity.model.ListModel;
+import com.hrawat.nearby.activity.model.SearchModel.PlaceResultModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +21,28 @@ import java.util.List;
  */
 public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public interface ClickListener {
+
+        void onListClick(ListAdapter adapter, int position);
+    }
+
     private List<ListModel> items;
+    private List<PlaceResultModel> placeResultModelList;
     private Context context;
     private static final int TYPE_LOADING = 1;
     private static final int TYPE_LIST = TYPE_LOADING + 1;
     private static final int TYPE_EMPTY = TYPE_LIST + 1;
-    private boolean isloading;
+    private boolean isLoading;
+    private ClickListener clickListener;
 
     public ListAdapter(Context context) {
         this.items = new ArrayList<>();
+        this.placeResultModelList = new ArrayList<>();
         this.context = context;
+    }
+
+    public void setClickListener(ClickListener listener) {
+        this.clickListener = listener;
     }
 
     @Override
@@ -44,12 +59,78 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof MyViewHolder) {
             MyViewHolder myViewHolder = (MyViewHolder) holder;
             ListModel details = items.get(position);
+//            PlaceResultModel placeResultModel = placeResultModelList.get(position);
+            switch (placeResultModelList.get(position).getTypes().get(0)) {
+                case "restaurant":
+                case "cafe":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "lodging":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "night_club":
+                case "bar":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "grocery_or_supermarket":
+                case "store":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "hospital":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "car_repair":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "gym":
+                case "health":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "transit_station":
+                case "bus_station":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "gas_station":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "police":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "school":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                case "shopping_mall":
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.category_image));
+                    break;
+                default:
+                    myViewHolder.relativeLayout.setBackground(context.getResources()
+                            .getDrawable(R.drawable.orangebox));
+                    break;
+            }
             myViewHolder.tvName.setText(details.getName());
             myViewHolder.tvAddress.setText(details.getAddress());
+            myViewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickListener.onListClick(ListAdapter.this, position);
+                }
+            });
         } else if (holder instanceof EmptyViewHolder) {
             EmptyViewHolder emptyViewHolder = (EmptyViewHolder) holder;
         } else if (holder instanceof LoadingViewHolder) {
@@ -57,22 +138,24 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public void replaceAll(ArrayList<ListModel> listModels) {
+    public void replaceAll(ArrayList<ListModel> listModels, ArrayList<PlaceResultModel> places) {
         this.items.clear();
         this.items.addAll(listModels);
-        this.isloading = false;
+        this.placeResultModelList.clear();
+        this.placeResultModelList.addAll(places);
+        this.isLoading = false;
         this.notifyDataSetChanged();
     }
 
     public void clearAll() {
-        this.isloading = false;
+        this.isLoading = false;
         this.items.clear();
         this.notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        if (isloading)
+        if (isLoading)
             return 1;
         else
             return items.size() == 0 ? 1 : items.size();
@@ -80,7 +163,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (isloading)
+        if (isLoading)
             return TYPE_LOADING;
         if (items.size() == 0)
             return TYPE_EMPTY;
@@ -88,8 +171,16 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return TYPE_LIST;
     }
 
+    public String getPlace(int position) {
+        if (placeResultModelList != null) {
+            Gson gson = new Gson();
+            return gson.toJson(placeResultModelList.get(position));
+        }
+        return null;
+    }
+
     public void startLoading() {
-        this.isloading = true;
+        this.isLoading = true;
         notifyDataSetChanged();
     }
 
@@ -97,11 +188,13 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private TextView tvName;
         private TextView tvAddress;
+        private RelativeLayout relativeLayout;
 
         MyViewHolder(View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.title);
             tvAddress = itemView.findViewById(R.id.address);
+            relativeLayout = itemView.findViewById(R.id.rl_item);
         }
     }
 
