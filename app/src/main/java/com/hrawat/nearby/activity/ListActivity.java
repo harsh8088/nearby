@@ -1,6 +1,7 @@
 package com.hrawat.nearby.activity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,7 +45,6 @@ import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LONGITUTE;
 public class ListActivity extends AppCompatActivity {
 
     public static final String BUNDLE_EXTRA_CATEGORY_NAME = "BUNDLE_EXTRA_CATEGORY_NAME";
-
     private String TAG = this.getClass().getSimpleName();
     private ListAdapter listAdapter;
     private EditText etSearch;
@@ -114,11 +116,20 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onListClick(ListAdapter adapter, int position) {
                 Intent intent = new Intent(ListActivity.this, DetailsActivity.class);
-                if(listAdapter.getPlace(position)!=null)
-                intent.putExtra(BUNDLE_EXTRA_PLACE, listAdapter.getPlace(position));
+                if (listAdapter.getPlace(position) != null)
+                    intent.putExtra(BUNDLE_EXTRA_PLACE, listAdapter.getPlace(position));
                 startActivity(intent);
             }
         });
+    }
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
     private void showFilterDialog() {
@@ -203,6 +214,7 @@ public class ListActivity extends AppCompatActivity {
                                     placeResultModel.getVicinity()));
                         }
                         listAdapter.replaceAll(listModels, places);
+                        runLayoutAnimation(recyclerViewList);
                         Log.d(TAG, "Number of Places : " + places.size());
                         break;
                     case "ZERO_RESULTS":
@@ -221,6 +233,7 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<SearchResults> call, Throwable t) {
                 listAdapter.replaceAll(new ArrayList<ListModel>(), new ArrayList<PlaceResultModel>());
+                runLayoutAnimation(recyclerViewList);
                 Log.d(TAG, "Error : " + t.toString());
             }
         });

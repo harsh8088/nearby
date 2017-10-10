@@ -144,7 +144,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.placeResultModelList.clear();
         this.placeResultModelList.addAll(places);
         this.isLoading = false;
-        this.notifyDataSetChanged();
+//        this.notifyDataSetChanged();
     }
 
     public void clearAll() {

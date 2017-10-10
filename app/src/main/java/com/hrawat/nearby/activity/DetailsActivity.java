@@ -66,13 +66,10 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         LatLng currentLocation = new LatLng((Double) Hawk.get(LOCATION_LATITUDE),
                 (Double) Hawk.get(LOCATION_LONGITUTE));
-        // Add a marker in current location and move the camera
-        googleMap.addMarker(new MarkerOptions().position(currentLocation).title("You are here"));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
         double lat = placeResultModel.getGeometry().getLocation().getLat();
         double lng = placeResultModel.getGeometry().getLocation().getLng();
         LatLng latLng = new LatLng(lat, lng);
         googleMap.addMarker(new MarkerOptions().position(latLng).title("Destination"));
-
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
     }
 }
