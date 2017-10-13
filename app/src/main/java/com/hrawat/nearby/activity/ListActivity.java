@@ -147,8 +147,11 @@ public class ListActivity extends AppCompatActivity {
             if (filterModel.isApplied()) {
                 int distance = Integer.valueOf(filterModel.getDistance());
                 distance = distance / 1000;
-//                textSeekBar.setText(distance);
+                textSeekBar.setText(String.valueOf(distance));
                 seekBar.setProgress(distance);
+            } else {
+                textSeekBar.setText("5");
+                seekBar.setProgress(5);
             }
         }
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

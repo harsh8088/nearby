@@ -50,7 +50,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_margin="20dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -61,20 +61,12 @@
                     android:layout_marginTop="30dp"
                     />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:text="or"
-                    android:textSize="16sp"
-                    />
-
                 <com.facebook.login.widget.LoginButton
                     android:id="@+id/fb_login_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:layout_margin="20dp"
+                    android:layout_marginBottom="30dp"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -84,7 +76,6 @@
         android:id="@+id/tv_skip_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="4dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -93,7 +84,8 @@
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
         android:gravity="center"
+        android:padding="4dp"
         android:text="Skip"
-        android:textSize="18sp"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
 </RelativeLayout>
