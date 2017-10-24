@@ -31,7 +31,8 @@ public class SplashActivity extends AppCompatActivity {
                 //Do something after 100ms
                 animationZoom.cancel();
                 finish();
-                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+//                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                 //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 startActivity(intent);
             }

@@ -382,17 +382,13 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(HomeActivity.this, ListActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_slideshow) {
-        } else if (id == R.id.nav_manage) {
+        if (id == R.id.nav_manage) {
         } else if (id == R.id.nav_share) {
-        } else if (id == R.id.nav_logout) {
-            signOut();
-        } else if (id == R.id.nav_privacy) {
+        }
+// else if (id == R.id.nav_logout) {
+//            signOut();
+//        }
+        else if (id == R.id.nav_privacy) {
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
