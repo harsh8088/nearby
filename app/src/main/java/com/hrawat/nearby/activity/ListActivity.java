@@ -109,7 +109,7 @@ public class ListActivity extends AppCompatActivity {
                             searchNearby(searchfor, searchfor, "5000");
                         }
                     }
-                }, 1000);
+                }, 1500);
             }
         });
         listAdapter.setClickListener(new ListAdapter.ClickListener() {

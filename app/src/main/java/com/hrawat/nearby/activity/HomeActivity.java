@@ -8,12 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,15 +18,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,28 +37,16 @@ import com.hrawat.nearby.BuildConfig;
 import com.hrawat.nearby.R;
 import com.hrawat.nearby.activity.adapter.CategoryAdapter;
 import com.hrawat.nearby.activity.model.NearByCategory;
-import com.hrawat.nearby.activity.model.SearchModel.PlaceResultModel;
-import com.hrawat.nearby.activity.model.SearchModel.SearchResults;
-import com.hrawat.nearby.network.ApiClient;
-import com.hrawat.nearby.network.ApiInterface;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener {
+        implements GoogleApiClient.OnConnectionFailedListener {
 
     public static final String LOCATION_LATITUDE = "LOCATION_LATITUDE";
     public static final String LOCATION_LONGITUTE = "LOCATION_LONGITUTE";
     private String TAG = this.getClass().getName();
-    private String name = "username";
-    private String email = "abc@mail.com";
-    private GoogleApiClient apiClient;
     private CategoryAdapter categoryAdapter;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -85,29 +64,8 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void init() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            name = bundle.getString(LoginActivity.USER_NAME);
-            email = bundle.getString(LoginActivity.USER_EMAIL);
-        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        GoogleSignInOptions options = new GoogleSignInOptions.
-                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        apiClient = new GoogleApiClient.Builder(this).
-                enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, options).build();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View navheader = navigationView.getHeaderView(0);
-        TextView userName = navheader.findViewById(R.id.tv_user_name);
-        TextView emailID = navheader.findViewById(R.id.tv_mail_id);
-        userName.setText(name);
-        emailID.setText(email);
-        navigationView.setNavigationItemSelectedListener(this);
         categoryAdapter = new CategoryAdapter(this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_category);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
@@ -168,7 +126,6 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-//        mAuth.addAuthStateListener(mAuthListener);
         if (!checkPermissions()) {
             requestPermissions();
         } else {
@@ -304,48 +261,6 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    private void searchNearby(String LatLongString, String searchfor, String keyword, String searchWithin) {
-        ApiInterface apiService =
-                ApiClient.getPlacesClient().create(ApiInterface.class);
-        Call<SearchResults> call = apiService.getNearByPlaces(LatLongString, searchWithin,
-                searchfor, keyword, "AIzaSyChQ0n-vud41n-_pz-nXBiDJTQrG7F0CJs");
-        call.enqueue(new Callback<SearchResults>() {
-            @Override
-            public void onResponse(Call<SearchResults> call, Response<SearchResults> response) {
-                String status = response.body().getStatus();
-                switch (status) {
-                    case "OK":
-                        ArrayList<PlaceResultModel> places = response.body().getResults();
-                        Log.d(TAG, "Number of Places : " + places.size());
-                        break;
-                    case "ZERO_RESULTS":
-                        Toast.makeText(HomeActivity.this, "No such results!!!",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                    case "REQUEST_DENIED":
-                        Log.d(TAG, "Access Denied : " + response.body().getErrorMessage());
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SearchResults> call, Throwable t) {
-                Log.d(TAG, "Error : " + t.toString());
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -375,38 +290,6 @@ public class HomeActivity extends AppCompatActivity
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        if (id == R.id.nav_manage) {
-        } else if (id == R.id.nav_share) {
-        }
-// else if (id == R.id.nav_logout) {
-//            signOut();
-//        }
-        else if (id == R.id.nav_privacy) {
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    public void signOut() {
-        Auth.GoogleSignInApi.signOut(apiClient).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                FirebaseAuth.getInstance().signOut();
-                Toast.makeText(HomeActivity.this, "LogOut Succesfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-            }
-        });
     }
 
     @Override
