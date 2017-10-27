@@ -134,7 +134,7 @@ public class ListActivity extends AppCompatActivity {
 
     private void showFilterDialog() {
         final Dialog dialog = new Dialog(this);
-        dialog.setTitle("Filter by");
+        dialog.setTitle("Filter by Distance");
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.filter_dialog);
         final TextView textSeekBar = dialog.findViewById(R.id.tv_seek_bar_max);
