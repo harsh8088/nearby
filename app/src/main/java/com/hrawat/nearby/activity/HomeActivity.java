@@ -97,11 +97,6 @@ public class HomeActivity extends AppCompatActivity
         };
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
     private void getAllCategories() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("categories");

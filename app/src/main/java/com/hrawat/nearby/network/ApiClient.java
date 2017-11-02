@@ -8,8 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ApiClient {
 
-    public static final String BASE_URL = "http://api.themoviedb.org/3/";
-    public static final String PLACE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
+    private static final String BASE_URL = "http://api.themoviedb.org/3/";
+    private static final String PLACE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
 
     private static Retrofit retrofit = null;
 

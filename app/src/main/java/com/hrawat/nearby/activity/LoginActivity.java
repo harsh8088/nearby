@@ -49,7 +49,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         textViewSkip = (TextView) findViewById(R.id.tv_skip_login);
-
 //
 //        // Add code to print out the key hash
 //        try {
@@ -69,7 +68,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mAuth = FirebaseAuth.getInstance();
         initGoogleSignIn();
         initFbSignIn();
-
         textViewSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

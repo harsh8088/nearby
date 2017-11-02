@@ -1,4 +1,4 @@
-package com.hrawat.nearby.activity.model.SearchModel;
+package com.hrawat.nearby.activity.model.searchModel;
 
 /**
  * Created by hrawat on 9/28/2017.

@@ -1,4 +1,4 @@
-package com.hrawat.nearby.activity.model.SearchModel;
+package com.hrawat.nearby.activity.model.searchModel;
 
 import java.util.List;
 

@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.hrawat.nearby.R;
-import com.hrawat.nearby.activity.model.SearchModel.PlaceResultModel;
+import com.hrawat.nearby.activity.model.searchModel.PlaceResultModel;
 import com.orhanobut.hawk.Hawk;
 
 import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LATITUDE;

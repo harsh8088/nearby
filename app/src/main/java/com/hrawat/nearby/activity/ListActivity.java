@@ -24,10 +24,10 @@ import android.widget.Toast;
 
 import com.hrawat.nearby.R;
 import com.hrawat.nearby.activity.adapter.ListAdapter;
+import com.hrawat.nearby.activity.model.FilterModel;
 import com.hrawat.nearby.activity.model.ListModel;
-import com.hrawat.nearby.activity.model.SearchModel.PlaceResultModel;
-import com.hrawat.nearby.activity.model.SearchModel.SearchResults;
-import com.hrawat.nearby.model.FilterModel;
+import com.hrawat.nearby.activity.model.searchModel.PlaceResultModel;
+import com.hrawat.nearby.activity.model.searchModel.SearchResults;
 import com.hrawat.nearby.network.ApiClient;
 import com.hrawat.nearby.network.ApiInterface;
 import com.orhanobut.hawk.Hawk;

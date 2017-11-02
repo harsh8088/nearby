@@ -1,6 +1,6 @@
 package com.hrawat.nearby.network;
 
-import com.hrawat.nearby.activity.model.SearchModel.SearchResults;
+import com.hrawat.nearby.activity.model.searchModel.SearchResults;
 
 import retrofit2.Call;
 import retrofit2.http.POST;

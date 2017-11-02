@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.hrawat.nearby.R;
 import com.hrawat.nearby.activity.model.ListModel;
-import com.hrawat.nearby.activity.model.SearchModel.PlaceResultModel;
+import com.hrawat.nearby.activity.model.searchModel.PlaceResultModel;
 
 import java.util.ArrayList;
 import java.util.List;

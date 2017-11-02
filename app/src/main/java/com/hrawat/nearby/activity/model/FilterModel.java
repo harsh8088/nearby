@@ -1,4 +1,4 @@
-package com.hrawat.nearby.model;
+package com.hrawat.nearby.activity.model;
 
 /**
  * Created by hrawat on 10/4/2017.
