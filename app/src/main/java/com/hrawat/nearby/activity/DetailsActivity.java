@@ -1,10 +1,13 @@
 package com.hrawat.nearby.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.hrawat.nearby.R;
+import com.hrawat.nearby.activity.adapter.NearByPagerAdapter;
 import com.hrawat.nearby.activity.model.searchModel.PlaceResultModel;
 import com.orhanobut.hawk.Hawk;
 
@@ -45,6 +49,50 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
             placeResultModel = gson.fromJson(bundle.getString(BUNDLE_EXTRA_PLACE), PlaceResultModel.class);
         }
         init();
+        initViewPager();
+    }
+
+    private void initViewPager() {
+        final ImageView imageViewMoreDetails = (ImageView) findViewById(R.id.iv_more_details);
+        imageViewMoreDetails.setBackground(getResources().getDrawable(R.drawable.ic_show_details));
+        final LinearLayout linearLayoutMoreDetails = findViewById(R.id.ll_more_details);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Details"));
+        tabLayout.addTab(tabLayout.newTab().setText("Reviews"));
+        tabLayout.addTab(tabLayout.newTab().setText("Photos"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+       String placeResultString=new Gson().toJson(placeResultModel,PlaceResultModel.class);
+        final NearByPagerAdapter adapter = new NearByPagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount(),placeResultString);
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+        imageViewMoreDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (linearLayoutMoreDetails.getVisibility() == View.GONE) {
+                    linearLayoutMoreDetails.setVisibility(View.VISIBLE);
+                    imageViewMoreDetails.setBackground(getResources().getDrawable(R.drawable.ic_hide_details));
+                } else {
+                    linearLayoutMoreDetails.setVisibility(View.GONE);
+                    imageViewMoreDetails.setBackground(getResources().getDrawable(R.drawable.ic_show_details));
+                }
+            }
+        });
     }
 
     private void init() {

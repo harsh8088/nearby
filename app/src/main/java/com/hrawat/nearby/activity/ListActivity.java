@@ -176,6 +176,7 @@ public class ListActivity extends AppCompatActivity {
                 distance = distance * 1000;
                 FilterModel filterModel = new FilterModel(String.valueOf(distance), true);
                 Hawk.put("FILTER", filterModel);
+                if(!etSearch.getText().toString().isEmpty())
                 searchNearby(etSearch.getText().toString(), etSearch.getText().toString(),
                         String.valueOf(distance));
                 dialog.dismiss();
@@ -192,7 +193,7 @@ public class ListActivity extends AppCompatActivity {
     private void searchNearby(String searchfor, String keyword, String searchWithin) {
         if (Hawk.contains("FILTER")) {
             FilterModel filterModel = Hawk.get("FILTER");
-            if (filterModel.isApplied()) {
+            if (filterModel!=null && filterModel.isApplied()) {
                 int distance = Integer.valueOf(filterModel.getDistance());
                 searchWithin = String.valueOf(distance);
             }

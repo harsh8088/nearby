@@ -36,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.hrawat.nearby.BuildConfig;
 import com.hrawat.nearby.R;
 import com.hrawat.nearby.activity.adapter.CategoryAdapter;
+import com.hrawat.nearby.activity.model.FilterModel;
 import com.hrawat.nearby.activity.model.NearByCategory;
 import com.orhanobut.hawk.Hawk;
 
@@ -61,6 +62,10 @@ public class HomeActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         init();
+        if (!Hawk.contains("FILTER")) {
+            FilterModel filterModel = new FilterModel("5000", true);
+            Hawk.put("FILTER", filterModel);
+        }
     }
 
     private void init() {
