@@ -74,8 +74,11 @@ public class TabFragmentPhotos extends Fragment {
                 switch (status) {
                     case "OK":
                         PlaceDetailModel placeDetailModel = response.body().getResult();
-                        photoAdapter.replaceAll(placeDetailModel.getPhotos());
-                        Log.d(TAG, "Number of Reviews : " + placeDetailModel.getReviews().size());
+                        if (placeDetailModel.getPhotos() != null) {
+                            photoAdapter.replaceAll(placeDetailModel.getPhotos());
+                            Log.d(TAG, "Number of Reviews : " + placeDetailModel.getReviews().size());
+                        } else
+                            photoAdapter.clearAll();
                         break;
                     case "ZERO_RESULTS":
                         Toast.makeText(getContext(), "No such results!!!",

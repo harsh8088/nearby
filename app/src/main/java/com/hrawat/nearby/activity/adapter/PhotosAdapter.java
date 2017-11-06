@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.hrawat.nearby.R;
 import com.hrawat.nearby.activity.model.searchModel.PhotosModel;
 
@@ -20,6 +21,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private List<PhotosModel> photosList;
     private Context context;
+    private static final String photoURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=";
     private static final int TYPE_LOADING = 1;
     private static final int TYPE_LIST = TYPE_LOADING + 1;
     private static final int TYPE_EMPTY = TYPE_LIST + 1;
@@ -39,12 +41,15 @@ public class PhotosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_LIST:
-                return new PhotosAdapter.MyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_photos, parent, false));
+                return new PhotosAdapter.MyViewHolder(LayoutInflater.from(context)
+                        .inflate(R.layout.item_photos, parent, false));
             case TYPE_LOADING:
-                return new PhotosAdapter.LoadingViewHolder((LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false)));
+                return new PhotosAdapter.LoadingViewHolder((LayoutInflater.from(context)
+                        .inflate(R.layout.item_loading, parent, false)));
             case TYPE_EMPTY:
             default:
-                return new PhotosAdapter.EmptyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_empty, parent, false));
+                return new PhotosAdapter.EmptyViewHolder(LayoutInflater.from(context)
+                        .inflate(R.layout.item_empty_photos, parent, false));
         }
     }
 
@@ -52,7 +57,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PhotosAdapter.MyViewHolder) {
             PhotosAdapter.MyViewHolder myViewHolder = (PhotosAdapter.MyViewHolder) holder;
-
+            PhotosModel photosModel = photosList.get(position);
+            String photoUrl = photoURL + photosModel.getPhotoReference() + "&key=AIzaSyChQ0n-vud41n-_pz-nXBiDJTQrG7F0CJs";
+            Glide.with(context).load(photoUrl).into(myViewHolder.ivPhoto);
         } else if (holder instanceof PhotosAdapter.EmptyViewHolder) {
             PhotosAdapter.EmptyViewHolder emptyViewHolder = (PhotosAdapter.EmptyViewHolder) holder;
         } else if (holder instanceof PhotosAdapter.LoadingViewHolder) {
@@ -63,9 +70,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void replaceAll(ArrayList<PhotosModel> photosModels) {
         this.photosList.clear();
         this.photosList.addAll(photosModels);
-
         this.isLoading = false;
-//        this.notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public void clearAll() {
@@ -91,8 +97,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         else
             return TYPE_LIST;
     }
-
-
 
     public void startLoading() {
         this.isLoading = true;

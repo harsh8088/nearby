@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.hrawat.nearby.R;
@@ -25,15 +25,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_LIST = TYPE_LOADING + 1;
     private static final int TYPE_EMPTY = TYPE_LIST + 1;
     private boolean isLoading;
-    private ListAdapter.ClickListener clickListener;
 
     public ReviewAdapter(Context context) {
         this.reviewList = new ArrayList<>();
         this.context = context;
-    }
-
-    public void setClickListener(ListAdapter.ClickListener listener) {
-        this.clickListener = listener;
     }
 
     @Override
@@ -45,7 +40,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 return new ReviewAdapter.LoadingViewHolder((LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false)));
             case TYPE_EMPTY:
             default:
-                return new ReviewAdapter.EmptyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_empty, parent, false));
+                return new ReviewAdapter.EmptyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_empty_reviews, parent, false));
         }
     }
 
@@ -54,6 +49,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (holder instanceof ReviewAdapter.MyViewHolder) {
             ReviewAdapter.MyViewHolder myViewHolder = (ReviewAdapter.MyViewHolder) holder;
             ReviewModel details = reviewList.get(position);
+            myViewHolder.rating.setRating(details.getRating());
+            myViewHolder.tv_review.setText(details.getText());
+            myViewHolder.tv_reviewer.setText(details.getAuthor_name());
+            myViewHolder.tv_date.setText(details.getRelative_time_description());
         } else if (holder instanceof ReviewAdapter.EmptyViewHolder) {
             ReviewAdapter.EmptyViewHolder emptyViewHolder = (ReviewAdapter.EmptyViewHolder) holder;
         } else if (holder instanceof ReviewAdapter.LoadingViewHolder) {
@@ -65,7 +64,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.reviewList.clear();
         this.reviewList.addAll(reviewModels);
         this.isLoading = false;
-//        this.notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public void clearAll() {
@@ -99,15 +98,17 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvName;
-        private TextView tvAddress;
-        private RelativeLayout relativeLayout;
+        private RatingBar rating;
+        private TextView tv_review;
+        private TextView tv_reviewer;
+        private TextView tv_date;
 
         MyViewHolder(View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.title);
-            tvAddress = itemView.findViewById(R.id.address);
-            relativeLayout = itemView.findViewById(R.id.rl_item);
+            rating = itemView.findViewById(R.id.rb_rating);
+            tv_review = itemView.findViewById(R.id.tv_review);
+            tv_reviewer = itemView.findViewById(R.id.tv_reviewer);
+            tv_date = itemView.findViewById(R.id.tv_date);
         }
     }
 

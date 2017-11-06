@@ -9,9 +9,9 @@ public class PhotosModel {
 
     public Integer height;
 
-    public List<String> htmlAttributions;
+    public List<String> html_attributions;
 
-    public String photoReference;
+    public String photo_reference;
 
     public Integer width;
 
@@ -20,11 +20,11 @@ public class PhotosModel {
     }
 
     public List<String> getHtmlAttributions() {
-        return htmlAttributions;
+        return html_attributions;
     }
 
     public String getPhotoReference() {
-        return photoReference;
+        return photo_reference;
     }
 
     public Integer getWidth() {

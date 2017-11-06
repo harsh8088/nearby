@@ -53,18 +53,18 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void initViewPager() {
-        final ImageView imageViewMoreDetails = (ImageView) findViewById(R.id.iv_more_details);
+        final ImageView imageViewMoreDetails = findViewById(R.id.iv_more_details);
         imageViewMoreDetails.setBackground(getResources().getDrawable(R.drawable.ic_show_details));
         final LinearLayout linearLayoutMoreDetails = findViewById(R.id.ll_more_details);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Details"));
         tabLayout.addTab(tabLayout.newTab().setText("Reviews"));
         tabLayout.addTab(tabLayout.newTab().setText("Photos"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-       String placeResultString=new Gson().toJson(placeResultModel,PlaceResultModel.class);
+        final ViewPager viewPager = findViewById(R.id.pager);
+        String placeResultString = new Gson().toJson(placeResultModel, PlaceResultModel.class);
         final NearByPagerAdapter adapter = new NearByPagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount(),placeResultString);
+                (getSupportFragmentManager(), tabLayout.getTabCount(), placeResultString);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

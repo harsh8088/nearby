@@ -3,6 +3,7 @@ package com.hrawat.nearby.activity.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -48,8 +49,9 @@ public class TabFragmentReviews extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (getArguments().get("PLACE_ID") != null)
+        if (getArguments().get("PLACE_ID") != null) {
             placeId = getArguments().get("PLACE_ID").toString();
+        }
         initView(view);
     }
 
@@ -58,6 +60,9 @@ public class TabFragmentReviews extends Fragment {
         reviewAdapter = new ReviewAdapter(getContext());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                LinearLayoutManager.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setAdapter(reviewAdapter);
         fetchReviews();
     }
@@ -74,8 +79,11 @@ public class TabFragmentReviews extends Fragment {
                 switch (status) {
                     case "OK":
                         PlaceDetailModel placeDetailModel = response.body().getResult();
-                        reviewAdapter.replaceAll(placeDetailModel.getReviews());
-                        Log.d(TAG, "Number of Reviews : " + placeDetailModel.getReviews().size());
+                        if (placeDetailModel.getReviews() != null) {
+                            reviewAdapter.replaceAll(placeDetailModel.getReviews());
+                            Log.d(TAG, "Number of Reviews : " + placeDetailModel.getReviews().size());
+                        } else
+                            reviewAdapter.clearAll();
                         break;
                     case "ZERO_RESULTS":
                         Toast.makeText(getContext(), "No such results!!!",
@@ -93,5 +101,6 @@ public class TabFragmentReviews extends Fragment {
                 Log.d(TAG, "Error : " + t.toString());
             }
         });
+        Log.d(TAG, "fetch_hit");
     }
 }
