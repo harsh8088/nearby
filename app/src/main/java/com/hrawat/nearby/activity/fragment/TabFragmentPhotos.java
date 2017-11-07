@@ -29,7 +29,6 @@ public class TabFragmentPhotos extends Fragment {
 
     private static final String TAG = TabFragmentPhotos.class.getSimpleName();
     private PhotosAdapter photoAdapter;
-    private RecyclerView photoRecyclerView;
     private String placeId;
 
     public static TabFragmentPhotos newInstance(String placeId) {
@@ -54,7 +53,7 @@ public class TabFragmentPhotos extends Fragment {
     }
 
     private void initView(View view) {
-        photoRecyclerView = (view).findViewById(R.id.rv_photos);
+        RecyclerView photoRecyclerView = (view).findViewById(R.id.rv_photos);
         photoAdapter = new PhotosAdapter(getContext());
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
         photoRecyclerView.setLayoutManager(mLayoutManager);

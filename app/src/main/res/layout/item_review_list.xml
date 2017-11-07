@@ -11,6 +11,10 @@
         android:id="@+id/rb_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:isIndicator="true"
+        android:progressBackgroundTint="@android:color/holo_orange_light"
+        android:progressTint="@android:color/holo_orange_light"
+        android:secondaryProgressTint="@android:color/holo_orange_light"
         tools:rating="3.5"
         />
 

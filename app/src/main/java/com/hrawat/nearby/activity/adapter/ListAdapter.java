@@ -49,12 +49,15 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_LIST:
-                return new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_list, parent, false));
+                return new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_list,
+                        parent, false));
             case TYPE_LOADING:
-                return new LoadingViewHolder((LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false)));
+                return new LoadingViewHolder((LayoutInflater.from(context).inflate(R.layout.item_loading,
+                        parent, false)));
             case TYPE_EMPTY:
             default:
-                return new EmptyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_empty, parent, false));
+                return new EmptyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_empty,
+                        parent, false));
         }
     }
 
