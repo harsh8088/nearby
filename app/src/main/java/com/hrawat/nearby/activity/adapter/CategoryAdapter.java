@@ -48,8 +48,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final NearByCategory details = nearByCategoryList.get(position);
         CategoryViewHolder viewHolder = (CategoryViewHolder) holder;
-//        viewHolder.icon.(details.getIcon());
-//        viewHolder.background
         viewHolder.categoryName.setText(details.getName());
         viewHolder.background.setOnClickListener(new View.OnClickListener() {
             @Override

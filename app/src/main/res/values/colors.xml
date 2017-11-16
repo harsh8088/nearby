@@ -21,4 +21,12 @@
     <color name="black">#000000</color>
     <color name="orange">#F76718</color>
     <color name="txt_dark_grey">#707070</color>
+    <color name="food_drinks">#FF9E67</color>
+    <color name="shopping">#4B96F3</color>
+    <color name="health">#F98182</color>
+    <color name="entertainment">#14B5C7</color>
+    <color name="transport">#10BDFF</color>
+    <color name="outdoor">#4DB546</color>
+    <color name="civilServices_workshop">#7B9EB1</color>
+    <color name="services">#8F9CE2</color>
 </resources>

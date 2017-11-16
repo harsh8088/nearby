@@ -42,8 +42,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
-                android:textColor="@color/blue"
+                android:textColor="@color/outdoor"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 tools:text="Sec 50, Noida"/>
 
             <TextView
