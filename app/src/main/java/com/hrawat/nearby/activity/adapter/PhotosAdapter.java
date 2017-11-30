@@ -21,19 +21,24 @@ public class PhotosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private List<PhotosModel> photosList;
     private Context context;
-    private static final String photoURL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=";
+    private static final String IMAGE_URL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
     private static final int TYPE_LOADING = 1;
     private static final int TYPE_LIST = TYPE_LOADING + 1;
     private static final int TYPE_EMPTY = TYPE_LIST + 1;
     private boolean isLoading;
-    private ListAdapter.ClickListener clickListener;
+    private ClickListener clickListener;
+
+    public interface ClickListener {
+
+        void onPhotoClick(String url);
+    }
 
     public PhotosAdapter(Context context) {
         this.photosList = new ArrayList<>();
         this.context = context;
     }
 
-    public void setClickListener(ListAdapter.ClickListener listener) {
+    public void setClickListener(PhotosAdapter.ClickListener listener) {
         this.clickListener = listener;
     }
 
@@ -54,12 +59,18 @@ public class PhotosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof PhotosAdapter.MyViewHolder) {
             PhotosAdapter.MyViewHolder myViewHolder = (PhotosAdapter.MyViewHolder) holder;
             PhotosModel photosModel = photosList.get(position);
-            String photoUrl = photoURL + photosModel.getPhotoReference() + "&key=AIzaSyChQ0n-vud41n-_pz-nXBiDJTQrG7F0CJs";
+            final String photoUrl = IMAGE_URL + photosModel.getPhotoReference() + "&key=AIzaSyChQ0n-vud41n-_pz-nXBiDJTQrG7F0CJs";
             Glide.with(context).load(photoUrl).into(myViewHolder.ivPhoto);
+            myViewHolder.ivPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickListener.onPhotoClick(photoUrl);
+                }
+            });
         } else if (holder instanceof PhotosAdapter.EmptyViewHolder) {
             PhotosAdapter.EmptyViewHolder emptyViewHolder = (PhotosAdapter.EmptyViewHolder) holder;
         } else if (holder instanceof PhotosAdapter.LoadingViewHolder) {

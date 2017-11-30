@@ -57,7 +57,6 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         imageViewMoreDetails.setBackground(getResources().getDrawable(R.drawable.ic_show_details));
         final LinearLayout linearLayoutMoreDetails = findViewById(R.id.ll_more_details);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Details"));
         tabLayout.addTab(tabLayout.newTab().setText("Reviews"));
         tabLayout.addTab(tabLayout.newTab().setText("Photos"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.google.gson.Gson;
-import com.hrawat.nearby.activity.fragment.TabFragmentDetails;
 import com.hrawat.nearby.activity.fragment.TabFragmentPhotos;
 import com.hrawat.nearby.activity.fragment.TabFragmentReviews;
 import com.hrawat.nearby.activity.model.searchModel.PlaceResultModel;
@@ -28,10 +27,8 @@ public class NearByPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return TabFragmentDetails.newInstance(placeResultModel.getPlace_id());
-            case 1:
                 return TabFragmentReviews.newInstance(placeResultModel.getPlace_id());
-            case 2:
+            case 1:
                 return TabFragmentPhotos.newInstance(placeResultModel.getPlace_id());
             default:
                 return null;

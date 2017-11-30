@@ -1,5 +1,6 @@
 package com.hrawat.nearby.activity.fragment;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.hrawat.nearby.R;
 import com.hrawat.nearby.activity.adapter.PhotosAdapter;
 import com.hrawat.nearby.activity.model.placeModel.PlaceDetailModel;
@@ -58,7 +61,14 @@ public class TabFragmentPhotos extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
         photoRecyclerView.setLayoutManager(mLayoutManager);
         photoRecyclerView.setAdapter(photoAdapter);
+        photoAdapter.startLoading();
         fetchPhotos();
+        photoAdapter.setClickListener(new PhotosAdapter.ClickListener() {
+            @Override
+            public void onPhotoClick(String photoUrl) {
+                showImageDialog(photoUrl);
+            }
+        });
     }
 
     private void fetchPhotos() {
@@ -95,5 +105,21 @@ public class TabFragmentPhotos extends Fragment {
                 Log.d(TAG, "Error : " + t.toString());
             }
         });
+    }
+
+    private void showImageDialog(String photoUrl) {
+        final Dialog dialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_image);
+        ImageView ivPhoto = dialog.findViewById(R.id.iv_photo);
+        Glide.with(getContext()).load(photoUrl).into(ivPhoto);
+        final ImageView imageExit = dialog.findViewById(R.id.iv_close);
+        imageExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }

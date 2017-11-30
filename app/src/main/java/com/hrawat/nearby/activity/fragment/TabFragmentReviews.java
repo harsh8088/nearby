@@ -28,7 +28,7 @@ import retrofit2.Response;
  */
 public class TabFragmentReviews extends Fragment {
 
-    private static final String TAG = TabFragmentDetails.class.getSimpleName();
+    private static final String TAG = TabFragmentReviews.class.getSimpleName();
     private RecyclerView recyclerView;
     private ReviewAdapter reviewAdapter;
     private String placeId;
@@ -64,6 +64,7 @@ public class TabFragmentReviews extends Fragment {
                 LinearLayoutManager.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setAdapter(reviewAdapter);
+        reviewAdapter.startLoading();
         fetchReviews();
     }
 
