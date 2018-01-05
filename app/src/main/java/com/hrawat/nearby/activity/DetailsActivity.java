@@ -23,7 +23,7 @@ import com.hrawat.nearby.activity.model.searchModel.PlaceResultModel;
 import com.orhanobut.hawk.Hawk;
 
 import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LATITUDE;
-import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LONGITUTE;
+import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LONGITUDE;
 
 public class DetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -123,7 +123,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         LatLng currentLocation = new LatLng((Double) Hawk.get(LOCATION_LATITUDE),
-                (Double) Hawk.get(LOCATION_LONGITUTE));
+                (Double) Hawk.get(LOCATION_LONGITUDE));
         double lat = placeResultModel.getGeometry().getLocation().getLat();
         double lng = placeResultModel.getGeometry().getLocation().getLng();
         LatLng latLng = new LatLng(lat, lng);

@@ -1,6 +1,7 @@
 package com.hrawat.nearby.activity.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -29,7 +30,6 @@ import retrofit2.Response;
 public class TabFragmentReviews extends Fragment {
 
     private static final String TAG = TabFragmentReviews.class.getSimpleName();
-    private RecyclerView recyclerView;
     private ReviewAdapter reviewAdapter;
     private String placeId;
 
@@ -42,21 +42,21 @@ public class TabFragmentReviews extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.tab_fragment_reviews, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (getArguments().get("PLACE_ID") != null) {
+        if (getArguments() != null && getArguments().get("PLACE_ID") != null) {
             placeId = getArguments().get("PLACE_ID").toString();
         }
         initView(view);
     }
 
     private void initView(View view) {
-        recyclerView = (view).findViewById(R.id.rv_reviews);
+        RecyclerView recyclerView = (view).findViewById(R.id.rv_reviews);
         reviewAdapter = new ReviewAdapter(getContext());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -75,7 +75,7 @@ public class TabFragmentReviews extends Fragment {
                 "AIzaSyChQ0n-vud41n-_pz-nXBiDJTQrG7F0CJs");
         call.enqueue(new Callback<PlaceDetailResults>() {
             @Override
-            public void onResponse(Call<PlaceDetailResults> call, Response<PlaceDetailResults> response) {
+            public void onResponse(@NonNull Call<PlaceDetailResults> call, @NonNull Response<PlaceDetailResults> response) {
                 String status = response.body().getStatus();
                 switch (status) {
                     case "OK":
@@ -98,7 +98,7 @@ public class TabFragmentReviews extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PlaceDetailResults> call, Throwable t) {
+            public void onFailure(@NonNull Call<PlaceDetailResults> call, @NonNull Throwable t) {
                 Log.d(TAG, "Error : " + t.toString());
             }
         });

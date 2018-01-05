@@ -42,13 +42,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static final String USER_EMAIL = "EMAIL";
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
-    TextView textViewSkip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        textViewSkip = (TextView) findViewById(R.id.tv_skip_login);
+        TextView textViewSkip = findViewById(R.id.tv_skip_login);
 //
 //        // Add code to print out the key hash
 //        try {

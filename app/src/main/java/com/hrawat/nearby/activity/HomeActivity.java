@@ -46,7 +46,7 @@ public class HomeActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
 
     public static final String LOCATION_LATITUDE = "LOCATION_LATITUDE";
-    public static final String LOCATION_LONGITUTE = "LOCATION_LONGITUTE";
+    public static final String LOCATION_LONGITUDE = "LOCATION_LONGITUDE";
     private String TAG = this.getClass().getName();
     private CategoryAdapter categoryAdapter;
     private FirebaseAuth mAuth;
@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void init() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         categoryAdapter = new CategoryAdapter(this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_category);
@@ -169,7 +169,7 @@ public class HomeActivity extends AppCompatActivity
                         if (task.isSuccessful() && task.getResult() != null) {
                             mLastLocation = task.getResult();
                             Hawk.put(LOCATION_LATITUDE, mLastLocation.getLatitude());
-                            Hawk.put(LOCATION_LONGITUTE, mLastLocation.getLongitude());
+                            Hawk.put(LOCATION_LONGITUDE, mLastLocation.getLongitude());
                             Log.w(TAG, "LatLong: " + mLastLocation.getLatitude() +
                                     " , " + mLastLocation.getLongitude());
 //                            Toast.makeText(HomeActivity.this, "LatLong:" + mLastLocation.getLatitude()

@@ -40,7 +40,7 @@ import retrofit2.Response;
 
 import static com.hrawat.nearby.activity.DetailsActivity.BUNDLE_EXTRA_PLACE;
 import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LATITUDE;
-import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LONGITUTE;
+import static com.hrawat.nearby.activity.HomeActivity.LOCATION_LONGITUDE;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -49,7 +49,7 @@ public class ListActivity extends AppCompatActivity {
     private ListAdapter listAdapter;
     private EditText etSearch;
     private String categoryName = "";
-    RecyclerView recyclerViewList;
+    private RecyclerView recyclerViewList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,7 +200,7 @@ public class ListActivity extends AppCompatActivity {
         }
         listAdapter.startLoading();
         String LatLongString = String.format("%s,%s", Hawk.get(LOCATION_LATITUDE),
-                Hawk.get(LOCATION_LONGITUTE));
+                Hawk.get(LOCATION_LONGITUDE));
         ApiInterface apiService =
                 ApiClient.getPlacesClient().create(ApiInterface.class);
         Call<SearchResults> call = apiService.getNearByPlaces(LatLongString, searchWithin,
