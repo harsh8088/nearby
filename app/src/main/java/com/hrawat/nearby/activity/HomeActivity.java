@@ -172,9 +172,6 @@ public class HomeActivity extends AppCompatActivity
                             Hawk.put(LOCATION_LONGITUDE, mLastLocation.getLongitude());
                             Log.w(TAG, "LatLong: " + mLastLocation.getLatitude() +
                                     " , " + mLastLocation.getLongitude());
-//                            Toast.makeText(HomeActivity.this, "LatLong:" + mLastLocation.getLatitude()
-//                                            + " " + mLastLocation.getLongitude(),
-//                                    Toast.LENGTH_SHORT).show();
                         } else {
                             Log.w(TAG, "getLastLocation:exception", task.getException());
                             Toast.makeText(HomeActivity.this, "no_location_detected",

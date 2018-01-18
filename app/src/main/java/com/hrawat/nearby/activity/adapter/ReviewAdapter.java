@@ -35,12 +35,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_LIST:
-                return new ReviewAdapter.MyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_review_list, parent, false));
+                return new ReviewAdapter.MyViewHolder(LayoutInflater.from(context)
+                        .inflate(R.layout.item_review_list, parent, false));
             case TYPE_LOADING:
-                return new ReviewAdapter.LoadingViewHolder((LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false)));
+                return new ReviewAdapter.LoadingViewHolder((LayoutInflater.from(context)
+                        .inflate(R.layout.item_loading, parent, false)));
             case TYPE_EMPTY:
             default:
-                return new ReviewAdapter.EmptyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_empty_reviews, parent, false));
+                return new ReviewAdapter.EmptyViewHolder(LayoutInflater.from(context)
+                        .inflate(R.layout.item_empty_reviews, parent, false));
         }
     }
 

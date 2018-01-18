@@ -21,7 +21,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private List<PhotosModel> photosList;
     private Context context;
-    private static final String IMAGE_URL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
+    private static final String IMAGE_URL =
+            "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
     private static final int TYPE_LOADING = 1;
     private static final int TYPE_LIST = TYPE_LOADING + 1;
     private static final int TYPE_EMPTY = TYPE_LIST + 1;

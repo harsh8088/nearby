@@ -66,7 +66,6 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder instanceof MyViewHolder) {
             MyViewHolder myViewHolder = (MyViewHolder) holder;
             ListModel details = items.get(position);
-//            PlaceResultModel placeResultModel = placeResultModelList.get(position);
             switch (placeResultModelList.get(position).getTypes().get(0)) {
                 case "restaurant":
                 case "cafe":

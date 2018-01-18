@@ -55,7 +55,7 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle bundle = getIntent().getExtras();
@@ -75,13 +75,13 @@ public class ListActivity extends AppCompatActivity {
     }
 
     private void init() {
-        recyclerViewList = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerViewList =  findViewById(R.id.recycler_view);
         listAdapter = new ListAdapter(this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerViewList.setLayoutManager(mLayoutManager);
         recyclerViewList.setAdapter(listAdapter);
-        etSearch = (EditText) findViewById(R.id.et_action_search);
-        ImageView imageFilter = (ImageView) findViewById(R.id.iv_filter_search);
+        etSearch =  findViewById(R.id.et_action_search);
+        ImageView imageFilter =  findViewById(R.id.iv_filter_search);
         imageFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
