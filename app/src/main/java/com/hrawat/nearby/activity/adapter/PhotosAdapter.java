@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Created by hrawat on 11/3/2017.
- */
+ **/
 public class PhotosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<PhotosModel> photosList;
@@ -64,7 +64,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (holder instanceof PhotosAdapter.MyViewHolder) {
             PhotosAdapter.MyViewHolder myViewHolder = (PhotosAdapter.MyViewHolder) holder;
             PhotosModel photosModel = photosList.get(position);
-            final String photoUrl = IMAGE_URL + photosModel.getPhotoReference() + "&key=AIzaSyChQ0n-vud41n-_pz-nXBiDJTQrG7F0CJs";
+            final String photoUrl = IMAGE_URL + photosModel.getPhotoReference() +
+                    "&key=AIzaSyChQ0n-vud41n-_pz-nXBiDJTQrG7F0CJs";
             Glide.with(context).load(photoUrl).into(myViewHolder.ivPhoto);
             myViewHolder.ivPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
