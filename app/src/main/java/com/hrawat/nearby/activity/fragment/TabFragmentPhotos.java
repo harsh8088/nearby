@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,11 +16,15 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.hrawat.nearby.R;
+import com.hrawat.nearby.activity.DetailsActivity;
 import com.hrawat.nearby.activity.adapter.PhotosAdapter;
 import com.hrawat.nearby.activity.model.placeModel.PlaceDetailModel;
 import com.hrawat.nearby.activity.model.placeModel.PlaceDetailResults;
 import com.hrawat.nearby.network.ApiClient;
 import com.hrawat.nearby.network.ApiInterface;
+
+import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +38,7 @@ public class TabFragmentPhotos extends Fragment {
     private static final String TAG = TabFragmentPhotos.class.getSimpleName();
     private PhotosAdapter photoAdapter;
     private String placeId;
+    private RecyclerView photoRecyclerView;
 
     public static TabFragmentPhotos newInstance(String placeId) {
         TabFragmentPhotos fragment = new TabFragmentPhotos();
@@ -53,10 +59,27 @@ public class TabFragmentPhotos extends Fragment {
         if (getArguments().get("PLACE_ID") != null)
             placeId = getArguments().get("PLACE_ID").toString();
         initView(view);
+        setExitSharedElementCallback(
+                new SharedElementCallback() {
+                    @Override
+                    public void onMapSharedElements(
+                            List<String> names, Map<String, View> sharedElements) {
+                        // Locate the ViewHolder for the clicked position.
+                        RecyclerView.ViewHolder selectedViewHolder = photoRecyclerView
+                                .findViewHolderForAdapterPosition(DetailsActivity.currentPosition);
+                        if (selectedViewHolder == null || selectedViewHolder.itemView == null) {
+                            return;
+                        }
+                        // Map the first shared element name to the child ImageView.
+                        sharedElements
+                                .put(names.get(0),
+                                        selectedViewHolder.itemView.findViewById(R.id.iv_photo));
+                    }
+                });
     }
 
     private void initView(View view) {
-        RecyclerView photoRecyclerView = (view).findViewById(R.id.rv_photos);
+        photoRecyclerView = (view).findViewById(R.id.rv_photos);
         photoAdapter = new PhotosAdapter(getContext());
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
         photoRecyclerView.setLayoutManager(mLayoutManager);

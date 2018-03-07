@@ -17,4 +17,5 @@
     <string name="search">Search</string>
     <string name="restaurants">Restaurants,Hotels,etc</string>
     <string name="title_activity_detail_map">Map</string>
+    <string name="label_by">By</string>
 </resources>

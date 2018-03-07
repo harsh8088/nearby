@@ -130,14 +130,14 @@ public class HomeActivity extends AppCompatActivity
         nearByCategories.add(new NearByCategory("", "Bars", ""));
         nearByCategories.add(new NearByCategory("", "Hotels", ""));
         nearByCategories.add(new NearByCategory("", "Restaurants", ""));
-        nearByCategories.add(new NearByCategory("", "Bus Stations", ""));
+        nearByCategories.add(new NearByCategory("", "Hospitals", ""));
         nearByCategories.add(new NearByCategory("", "Pharmacy", ""));
         nearByCategories.add(new NearByCategory("", "Shopping Malls", ""));
         nearByCategories.add(new NearByCategory("", "Grocery Store", ""));
         nearByCategories.add(new NearByCategory("", "Service Center", ""));
-        nearByCategories.add(new NearByCategory("", "Hospitals", ""));
-        nearByCategories.add(new NearByCategory("", "Petrol Pumps", ""));
         nearByCategories.add(new NearByCategory("", "Game Parlours", ""));
+        nearByCategories.add(new NearByCategory("", "Petrol Pumps", ""));
+        nearByCategories.add(new NearByCategory("", "Bus Stations", ""));
         nearByCategories.add(new NearByCategory("", "Railway Stations", ""));
         categoryAdapter.addAllCategories(nearByCategories);
     }

@@ -1,45 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:weightSum="1"
         >
 
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbar"/>
 
-        <LinearLayout
-            android:id="@+id/ll_map"
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_below="@id/toolbar"
-            android:orientation="vertical">
-
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
+            android:layout_height="200dp"/>
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_view_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ll_map"
             android:requiresFadingEdge="horizontal"
             app:cardCornerRadius="4dp"
             app:cardUseCompatPadding="true">
@@ -101,29 +87,7 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <LinearLayout
-            android:id="@+id/ll_icon_details"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/card_view_details"
-            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/iv_more_details"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                tools:src="@drawable/ic_show_details"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_more_details"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/ll_icon_details"
-            android:orientation="vertical"
-            android:visibility="gone"
-            >
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tab_layout"
@@ -137,8 +101,7 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="200dp"
                 />
-        </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</ScrollView>
