@@ -1,46 +1,46 @@
 {
   "project_info": {
-    "project_number": "215534536433",
-    "firebase_url": "https://nearby-4624d.firebaseio.com",
-    "project_id": "nearby-4624d",
-    "storage_bucket": "nearby-4624d.appspot.com"
+    "project_number": ""******"",
+    "firebase_url": ""******"",
+    "project_id": ""******"",
+    "storage_bucket": ""******""
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:215534536433:android:32b6f9f28c2d6b80",
+        "mobilesdk_app_id": ""******"",
         "android_client_info": {
-          "package_name": "com.hrawat.nearby"
+          "package_name": ""******""
         }
       },
       "oauth_client": [
         {
-          "client_id": "215534536433-e123blhcu5dh2jeuvodhvrnevlb73ukn.apps.googleusercontent.com",
+          "client_id": "******",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.hrawat.nearby",
-            "certificate_hash": "2b27049cf21e245f2e92bfdc2e030d5fe2ea3d05"
+            "package_name": ""******"",
+            "certificate_hash": "******"
           }
         },
         {
-          "client_id": "215534536433-b3s61jvfj714hkskj4oquhs9hd1pg21s.apps.googleusercontent.com",
+          "client_id": "******",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.hrawat.nearby",
-            "certificate_hash": "30baa8af81c38fbedd38efc14b19d85a0f31797d"
+            "package_name": "******",
+            "certificate_hash":"******"
           }
         },
         {
-          "client_id": "215534536433-fipsoqfutcal2gg6rq6v4a48674f0co3.apps.googleusercontent.com",
+          "client_id": "******",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCZJX62yH5yyo5mYPAr_eAvcJhYlsBGPbw"
+          "current_key":"******"
         },
         {
-          "current_key": "AIzaSyCv8seZhHw_dSH06bF5NZhhxY_mw4Bt5aQ"
+          "current_key": "******"
         }
       ],
       "services": {
@@ -51,7 +51,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "215534536433-fipsoqfutcal2gg6rq6v4a48674f0co3.apps.googleusercontent.com",
+              "client_id": "******",
               "client_type": 3
             }
           ]
